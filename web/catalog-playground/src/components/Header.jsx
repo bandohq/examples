@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Toolbar, Typography, Container, Box, Chip, Button } from '@mui/material'
+import { AppBar, Toolbar, Typography, Container, Box, Chip, Button, Link } from '@mui/material'
 import { GitHub as GitHubIcon, Api as ApiIcon, ArrowOutward as ArrowOutwardIcon } from '@mui/icons-material'
 import bandoLogo from '../../bando-logo-white.svg'
 
@@ -25,13 +25,18 @@ const Header = () => {
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-            <Chip 
-              label="Connected" 
-              color="success" 
+            <Button 
+              href="https://github.com/bandohq/examples/tree/main/web/catalog-playground"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="primary" 
               size="small" 
-              icon={<ApiIcon fontSize="small" />}
-              variant="outlined"
-            />
+              variant='outlined'
+              sx={{ display: 'flex', alignItems: 'center', gap: 1, textTransform: 'none' }}
+            >
+              Source Code
+              <GitHubIcon fontSize="small" />
+            </Button>
             <Button 
               href="https://docs.bando.cool"
               target="_blank"
@@ -40,6 +45,7 @@ const Header = () => {
               color="primary"
               size="small"
               endIcon={<ArrowOutwardIcon fontSize="small" />}
+              sx={{ display: 'flex', alignItems: 'center', gap: 1, textTransform: 'none' }}
             >
               API Docs
             </Button>
