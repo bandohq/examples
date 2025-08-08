@@ -1,4 +1,5 @@
 import React from 'react'
+import { Card, CardContent, Typography, Box, Chip, Divider, Grid } from '@mui/material'
 
 const ProductCard = ({ variant }) => {
   const formatPrice = (price) => {
@@ -16,7 +17,7 @@ const ProductCard = ({ variant }) => {
       validations.push({
         type: referenceType.name || 'Reference',
         format: referenceType.valueType || 'string',
-        example: referenceType.name === 'email' ? 'user@example.com' : 'Required'
+        required: true
       })
     }
     
@@ -25,7 +26,7 @@ const ProductCard = ({ variant }) => {
         validations.push({
           type: field.name,
           format: field.valueType || 'string',
-          example: field.name.includes('email') ? 'user@example.com' : 'Required'
+          required: true
         })
       })
     }
@@ -34,86 +35,138 @@ const ProductCard = ({ variant }) => {
   }
 
   const validations = formatValidation(variant.referenceType, variant.requiredFields)
+  
+  // Extract product name and description from variant data
+  const productName = variant.name || variant.productName
+  const productDescription = variant.description || variant.productDescription
 
   return (
-    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          <h5 className="font-medium text-gray-800 mb-1">
-            {variant.shortNotes || variant.notes || `Product ${variant.sku?.slice(-8)}`}
-          </h5>
-          <div className="text-lg font-semibold text-green-600">
-            {formatPrice(variant.price)}
-          </div>
-        </div>
-        <div className="text-xs text-gray-500 ml-4">
-          SKU: {variant.sku?.slice(-8)}...
-        </div>
-      </div>
-
-      {variant.notes && variant.notes !== variant.shortNotes && (
-        <div className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {variant.notes}
-        </div>
-      )}
+    <Card 
+      variant="outlined" 
+      sx={{
+        borderLeft: 2, 
+        borderColor: 'primary.main', 
+        transition: 'all 0.3s ease', 
+        '&:hover': { transform: 'translateY(-4px)', boxShadow: 3 },
+        height: '100%'
+      }}
+    >
+      <CardContent>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+          <Box>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {productName || variant.shortNotes || variant.notes || `Product ${variant.sku?.slice(-8)}`}
+            </Typography>
+            {(productDescription || (variant.notes && variant.notes !== variant.shortNotes)) && (
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                {productDescription || variant.notes}
+              </Typography>
+            )}
+          </Box>
+        </Box>
 
       {/* eSIM specific details */}
       {variant.dataGB && (
-        <div className="flex flex-wrap gap-2 mb-3">
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            📶 {variant.dataGB} GB
-          </span>
-          {variant.durationDays && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              📅 {variant.durationDays} days
-            </span>
-          )}
-          {variant.voiceMinutes && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-              📞 {variant.voiceMinutes} min
-            </span>
-          )}
-        </div>
+        <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
+          <Chip size="small" label={`${variant.dataGB}GB`} color="primary" variant="outlined" />
+          {variant.days && <Chip size="small" label={`${variant.days} days`} color="secondary" variant="outlined" />}
+        </Box>
       )}
 
-      {/* Validation requirements */}
+      {/* Price / SKU */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" color="primary" fontWeight="bold">
+          ${formatPrice(variant.price)}
+        </Typography>
+        <Chip 
+          label={variant.sku} 
+          size="small" 
+          variant="outlined" 
+          color="default" 
+          sx={{ bgcolor: 'background.default', fontSize: '0.6rem' }}
+        />
+      </Box>
+
+      {/* Validations */}
       {validations.length > 0 && (
-        <div className="border-t pt-3 mt-3">
-          <div className="text-xs font-medium text-gray-700 mb-2">Required Fields:</div>
-          <div className="space-y-1">
-            {validations.map((validation, index) => (
-              <div key={index} className="flex items-center text-xs text-gray-600">
-                <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
-                <span className="font-medium">{validation.type}:</span>
-                <span className="ml-1">{validation.example}</span>
-              </div>
+        <Box mb={2}>
+          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', mb: 0.5 }}>
+            Required Fields
+          </Typography>
+          <Box display="flex" flexDirection="column" gap={1}>
+            {validations.map((v, i) => (
+              <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Chip 
+                  label={v.type} 
+                  size="small" 
+                  color="error" 
+                  sx={{ fontSize: '0.7rem', fontWeight: 'bold' }}
+                />
+                <Typography variant="caption" color="text.secondary">
+                  <Box component="span" sx={{ bgcolor: 'grey.100', px: 0.5, py: 0.2, borderRadius: 0.5, fontFamily: 'monospace' }}>
+                    {v.format}
+                  </Box>
+                </Typography>
+              </Box>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
-      {/* Countries supported */}
-      {variant.supportedCountries && variant.supportedCountries.length > 0 && (
-        <div className="border-t pt-3 mt-3">
-          <div className="text-xs font-medium text-gray-700 mb-1">Supported Countries:</div>
-          <div className="flex flex-wrap gap-1">
-            {variant.supportedCountries.slice(0, 5).map((country, index) => (
-              <span 
-                key={index}
-                className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700"
-              >
-                {country}
-              </span>
+      {/* Countries */}
+      {(variant.countries && variant.countries.length > 0) && (
+        <Box mb={2}>
+          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', mb: 0.5 }}>
+            Available In
+          </Typography>
+          <Box display="flex" flexWrap="wrap" gap={0.5}>
+            {variant.countries.map((country, i) => (
+              <Chip 
+                key={i} 
+                label={country} 
+                size="small" 
+                variant="outlined" 
+                sx={{ fontSize: '0.6rem' }}
+              />
             ))}
-            {variant.supportedCountries.length > 5 && (
-              <span className="text-xs text-gray-500">
-                +{variant.supportedCountries.length - 5} more
-              </span>
-            )}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
-    </div>
+      
+      {/* Fallback for countries_code */}
+      {(!variant.countries || variant.countries.length === 0) && variant.countries_code && variant.countries_code.length > 0 && (
+        <Box mb={2}>
+          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', mb: 0.5 }}>
+            Available In
+          </Typography>
+          <Box display="flex" flexWrap="wrap" gap={0.5}>
+            {variant.countries_code.map((countryCode, i) => (
+              <Chip 
+                key={i} 
+                label={countryCode} 
+                size="small" 
+                variant="outlined" 
+                sx={{ fontSize: '0.6rem' }}
+              />
+            ))}
+          </Box>
+        </Box>
+      )}
+
+      {/* Actions */}
+      <Divider sx={{ my: 1.5 }} />
+      <Box>
+        {variant.status && (
+          <Chip 
+            label={variant.status} 
+            size="small" 
+            color={variant.status === 'active' ? 'success' : 'default'} 
+            variant="outlined"
+          />
+        )}
+      </Box>
+    </CardContent>
+  </Card>
   )
 }
 

@@ -1,4 +1,23 @@
 import React, { useState } from 'react'
+import { 
+  TextField, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  MenuItem, 
+  Button, 
+  Box, 
+  Typography, 
+  Grid, 
+  Chip,
+  FormHelperText,
+  ButtonGroup,
+  Paper
+} from '@mui/material'
+import { 
+  Search as SearchIcon, 
+  RestartAlt as ResetIcon 
+} from '@mui/icons-material'
 
 const ApiFilters = ({ onSubmit, loading }) => {
   const [filters, setFilters] = useState({
@@ -32,158 +51,123 @@ const ApiFilters = ({ onSubmit, loading }) => {
     })
   }
 
-  const predefinedScenarios = [
-    {
-      name: 'US eSIMs',
-      filters: { country: 'US', type: 'esim', pageSize: '5' }
-    },
-    {
-      name: 'Gift Cards',
-      filters: { type: 'gift_card', pageSize: '10' }
-    },
-    {
-      name: 'Mexico Products',
-      filters: { country: 'MX', pageSize: '8' }
-    },
-    {
-      name: 'Mobile Top-ups',
-      filters: { type: 'topup', pageSize: '6' }
-    }
-  ]
-
-  const applyScenario = (scenarioFilters) => {
-    setFilters(prev => ({
-      ...prev,
-      ...scenarioFilters,
-      pageNumber: '1'
-    }))
-  }
+  // Removed predefined scenarios
 
   return (
-    <div className="space-y-6">
-      {/* Quick Scenarios */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
-          Quick Scenarios
-        </label>
-        <div className="grid grid-cols-1 gap-2">
-          {predefinedScenarios.map((scenario, index) => (
-            <button
-              key={index}
-              onClick={() => applyScenario(scenario.filters)}
-              className="text-left px-3 py-2 text-sm bg-blue-50 hover:bg-blue-100 rounded-md border border-blue-200 text-blue-700 transition-colors"
-              disabled={loading}
-            >
-              {scenario.name}
-            </button>
-          ))}
-        </div>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {/* Filters */}
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <TextField
+          id="country"
+          name="country"
+          label="Country Code"
+          value={filters.country}
+          onChange={handleChange}
+          placeholder="e.g., US, MX, CA"
+          fullWidth
+          variant="outlined"
+          size="small"
+          helperText="ISO country code (2 letters)"
+          disabled={loading}
+        />
 
-      {/* Manual Filters */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
-            Country Code
-          </label>
-          <input
-            type="text"
-            id="country"
-            name="country"
-            value={filters.country}
-            onChange={handleChange}
-            placeholder="e.g., US, MX, CA"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-            Product Type
-          </label>
-          <select
+        <FormControl fullWidth size="small">
+          <InputLabel id="product-type-label">Product Type</InputLabel>
+          <Select
+            labelId="product-type-label"
             id="type"
             name="type"
             value={filters.type}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            label="Product Type"
+            disabled={loading}
           >
-            <option value="">All Types</option>
-            <option value="esim">eSIM</option>
-            <option value="gift_card">Gift Cards</option>
-            <option value="topup">Mobile Top-ups</option>
-          </select>
-        </div>
+            <MenuItem value="">All Types</MenuItem>
+            <MenuItem value="esim">eSIM</MenuItem>
+            <MenuItem value="gift_card">Gift Cards</MenuItem>
+            <MenuItem value="topup">Mobile Top-ups</MenuItem>
+          </Select>
+          <FormHelperText>Filter by product category</FormHelperText>
+        </FormControl>
 
-        <div>
-          <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-1">
-            Brand
-          </label>
-          <input
-            type="text"
-            id="brand"
-            name="brand"
-            value={filters.brand}
-            onChange={handleChange}
-            placeholder="e.g., llbean, att"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
+        {/*<TextField
+          id="brand"
+          name="brand"
+          label="Brand"
+          value={filters.brand}
+          onChange={handleChange}
+          placeholder="e.g., llbean, att"
+          fullWidth
+          variant="outlined"
+          size="small"
+          helperText="Brand name or identifier"
+          disabled={loading}
+        />*/}
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label htmlFor="pageSize" className="block text-sm font-medium text-gray-700 mb-1">
-              Page Size
-            </label>
-            <select
-              id="pageSize"
-              name="pageSize"
-              value={filters.pageSize}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
-          </div>
+        <Grid container spacing={2}>
+          {/*<Grid item xs={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="page-size-label">Page Size</InputLabel>
+              <Select
+                labelId="page-size-label"
+                id="pageSize"
+                name="pageSize"
+                value={filters.pageSize}
+                onChange={handleChange}
+                label="Page Size"
+                disabled={loading}
+              >
+                <MenuItem value="5">5</MenuItem>
+                <MenuItem value="10">10</MenuItem>
+                <MenuItem value="20">20</MenuItem>
+                <MenuItem value="50">50</MenuItem>
+              </Select>
+              <FormHelperText>Results per page</FormHelperText>
+            </FormControl>
+          </Grid>*/}
 
-          <div>
-            <label htmlFor="pageNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              Page
-            </label>
-            <input
-              type="number"
+          {/*<Grid item xs={6}>
+            <TextField
               id="pageNumber"
               name="pageNumber"
+              label="Page"
+              type="number"
               value={filters.pageNumber}
               onChange={handleChange}
-              min="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              fullWidth
+              variant="outlined"
+              size="small"
+              inputProps={{ min: 1 }}
+              helperText="Page number"
+              disabled={loading}
             />
-          </div>
-        </div>
+          </Grid>*/}
+        </Grid>
 
-        <div className="flex space-x-3 pt-4">
-          <button
+        <Box sx={{ display: 'flex', gap: 2, pt: 2 }}>
+          <Button
             type="submit"
+            variant="contained"
+            color="primary"
             disabled={loading}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            fullWidth
+            startIcon={<SearchIcon />}
           >
             {loading ? 'Loading...' : 'Search Products'}
-          </button>
-          <button
+          </Button>
+          
+          <Button
             type="button"
+            variant="outlined"
             onClick={handleReset}
             disabled={loading}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            startIcon={<ResetIcon />}
           >
             Reset
-          </button>
-        </div>
-      </form>
-    </div>
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

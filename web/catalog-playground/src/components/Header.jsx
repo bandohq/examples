@@ -1,34 +1,51 @@
 import React from 'react'
+import { AppBar, Toolbar, Typography, Container, Box, Chip, Button } from '@mui/material'
+import { GitHub as GitHubIcon, Api as ApiIcon, ArrowOutward as ArrowOutwardIcon } from '@mui/icons-material'
 
 const Header = () => {
   return (
-    <header className="bg-white shadow-sm border-b">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Bando API Playground
-            </h1>
-            <p className="text-gray-600 mt-1">
+    <AppBar position="static" color="transparent" elevation={0} sx={{ 
+      borderBottom: 1, 
+      borderColor: 'divider',
+      bgcolor: 'background.paper',
+      mb: 3
+    }}>
+      <Container maxWidth="xl">
+        <Toolbar sx={{ py: 2 }}>
+          <Box sx={{ flexGrow: 1}}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <img style={{ width: '100px', height: 'auto' }} src="bando-logo-white.svg" alt="Bando Logo" width="100" height="auto" />
+              <Typography variant="h5" component="h5" fontWeight="bold" color="text.primary">
+                Catalog Explorer
+              </Typography>
+            </Box>
+            <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 0.5 }}>
               Explore products, eSIMs, and gift cards through the Bando API
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              Connected
-            </span>
-            <a
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <Chip 
+              label="Connected" 
+              color="success" 
+              size="small" 
+              icon={<ApiIcon fontSize="small" />}
+              variant="outlined"
+            />
+            <Button 
               href="https://docs.bando.cool"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              variant="outlined"
+              color="primary"
+              size="small"
+              endIcon={<ArrowOutwardIcon fontSize="small" />}
             >
-              API Docs ↗
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
+              API Docs
+            </Button>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   )
 }
 
