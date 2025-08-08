@@ -1,6 +1,7 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography, Container, Box, Chip, Button } from '@mui/material'
 import { GitHub as GitHubIcon, Api as ApiIcon, ArrowOutward as ArrowOutwardIcon } from '@mui/icons-material'
+import bandoLogo from '../../bando-logo-white.svg'
 
 const Header = () => {
   return (
@@ -14,7 +15,7 @@ const Header = () => {
         <Toolbar sx={{ py: 2 }}>
           <Box sx={{ flexGrow: 1}}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <img style={{ width: '100px', height: 'auto' }} src="bando-logo-white.svg" alt="Bando Logo" width="100" height="auto" />
+              <img style={{ width: '100px', height: 'auto' }} src={bandoLogo} alt="Bando Logo" width="100" height="auto" />
               <Typography variant="h5" component="h5" fontWeight="bold" color="text.primary">
                 Catalog Explorer
               </Typography>
