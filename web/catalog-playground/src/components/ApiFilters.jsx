@@ -24,8 +24,6 @@ const ApiFilters = ({ onSubmit, loading }) => {
     country: '',
     type: '',
     brand: '',
-    pageSize: '10',
-    pageNumber: '1'
   })
 
   const handleChange = (e) => {
@@ -46,8 +44,6 @@ const ApiFilters = ({ onSubmit, loading }) => {
       country: '',
       type: '',
       brand: '',
-      pageSize: '10',
-      pageNumber: '1'
     })
   }
 

@@ -44,8 +44,6 @@ const App = () => {
     if (filters.country) params.append('country', filters.country)
     if (filters.type) params.append('type', filters.type)
     if (filters.brand) params.append('brand', filters.brand)
-    if (filters.pageSize) params.append('pageSize', filters.pageSize)
-    if (filters.pageNumber) params.append('pageNumber', filters.pageNumber)
     
     // Build the URL with query parameters
     const url = `https://api.bando.cool/api/v1/products/grouped/${params.toString() ? '?' + params.toString() : ''}`
