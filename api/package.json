@@ -1,0 +1,25 @@
+{
+  "name": "@bandohq/api-examples",
+  "version": "1.0.0",
+  "description": "Bando API Examples",
+  "main": "evm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "evm": "node evm.js",
+    "solana": "node solana.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/bandohq/examples"
+  },
+  "author": "g6s",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "axios": "^1.11.0",
+    "bs58": "^6.0.0",
+    "dotenv": "^17.2.1",
+    "solana": "^3.0.0",
+    "viem": "^2.34.0"
+  }
+}
