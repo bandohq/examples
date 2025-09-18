@@ -29,13 +29,17 @@ Create a file named `.env` with the following content:
 ```env
 EVM_RPC_URL=ff
 REFERENCE=dd
-EVM_PRIVATE_KEY=
+SOLANA_PRIVATE_KEY=
 ``` 
+
+# EVM networks
 
 ```bash
 pnpm run evm
 ```
 
+
+# SVM networks
 ```bash
 pnpm run solana
 ```

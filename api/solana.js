@@ -8,7 +8,7 @@ class SolanaBandoExample {
         this.connection = new Connection(rpcUrl);
         const privateKeyBytes = bs58.decode(privateKeyBase58);
         this.keypair = Keypair.fromSecretKey(privateKeyBytes);
-        this.apiBaseUrl = "https://apidev.bando.cool/api/v1";
+        this.apiBaseUrl = "https://api.bando.cool/api/v1";
         
         // Add diagnostic flags to help troubleshoot issues
         this.debugMode = true;
@@ -304,7 +304,7 @@ class SolanaBandoExample {
 // Replace this with your actual private key (in Base58 format)
 const PRIVATE_KEY = process.env.SOLANA_PRIVATE_KEY;
 // Actual sandbox MXN SKU with very low denomination for testing
-const SKU = "3575087f-f2b6-49e2-8235-5c4e298db6a3";
+const SKU = "0c1d5d7c-f35c-432a-bc45-6f999d061f5b";
 
 (async () => {
     try {
