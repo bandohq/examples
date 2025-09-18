@@ -44,7 +44,9 @@ class EVMBandoExample {
             });
             return response.data;
         } catch (error) {
-            console.error(`Error getting quote: ${error.message}`);
+            console.error(error.response.data);
+            console.error(`Payload: ${JSON.stringify(payload)}`);
+            console.error(`Error getting quote: ${error}`);
             return null;
         }
     }
@@ -61,6 +63,7 @@ class EVMBandoExample {
             const hash = await this.walletClient.sendTransaction(txParams);
             return hash;
         } catch (error) {
+            console.error(error);
             console.error(`Error sending transaction: ${error.message}`);
             return null;
         }
@@ -73,13 +76,14 @@ class EVMBandoExample {
       transactionIntent,
       transactionReceipt
     ) {
-        try {
-          const payload = {
+        const payload = {
             reference: reference,
             requiredFields: requiredFields,
             transactionIntent: transactionIntent,
             transactionReceipt: transactionReceipt
           };
+
+        try {          
           const response = await axios.post(
             `${this.apiBaseUrl}/wallets/${this.account.address}/transactions/?integrator=bando-app`,
             payload,
@@ -93,6 +97,7 @@ class EVMBandoExample {
           return response.data;
         } catch (error) {
           if (error.response) {
+            console.error(`Payload: ${JSON.stringify(payload)}`);
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
             console.error(`Status: ${error.response.status}`);
@@ -115,6 +120,7 @@ class EVMBandoExample {
 
         if (!quoteResponse || quoteResponse.error) {
             console.log("Error getting quote");
+            console.log(quoteResponse)
             return false;
         }
         
@@ -194,12 +200,14 @@ class EVMBandoExample {
             }
             
             console.log("Payment receipt sent successfully!");
-            console.log(`   Receipt ID: ${receiptResponse.id || 'N/A'}`);
+            console.log(`   Receipt ID: ${receiptResponse.transactionId}`);
             return true;
         } catch (error) {
             console.error(`Error confirming transaction: ${error.message}`);
             return false;
         }
+
+        //return true;
     }
 }
 
