@@ -8,6 +8,11 @@
 brew install node
 ```
 
+### Install PNPM
+
+```
+brew install pnpm
+```
 
 
 ```bash
