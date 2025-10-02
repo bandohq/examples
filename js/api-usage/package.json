@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Bando API Usage",
-  "main": "usage.js",
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "usage": "node usage.js"
+    "cli": "node cli.js"
   },
   "repository": {
     "type": "git",
