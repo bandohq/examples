@@ -152,7 +152,8 @@ const responseTokens = await fetch(tokensEndpoint);
 spinner.succeed(`Supported token list received for chain ${selectedNetwork.name}...`);
 const responseTokensJson = await responseTokens.json();
 
-const tokenAddressesSupported = responseTokensJson.data.filter(u => u.key === "USDC" || u.key === "USDT" || u.key === selectedNetwork.nativeToken.symbol);
+const tokenAddressesSupported = responseTokensJson.data.filter(u => u.key === "USDC" || u.key === "USDT" );
+// const tokenAddressesSupported = responseTokensJson.data;
 const tokenAddresses = tokenAddressesSupported.map( n => {
   return n.address;
 });
@@ -171,8 +172,19 @@ const tokenChoices = responseTokensJson.data.map( n => {
 // });
 
 // console.log(selectedToken);
+const pk_env_key = `PK_${selectedNetwork.key.toUpperCase()}`
 
-const walletPrivateKey = await password({ message: 'Enter your Private Key. We will not send or store it.' });
+console.log('Looking for PK in environment...')
+const pkConfigured = process.env[pk_env_key]
+
+
+if (!pkConfigured) {
+  console.log(`Not found PK configured in environment for key '${pk_env_key}'`);
+} else {
+  console.log(`Private Key found in environment with key '${pk_env_key}'`);
+}
+
+const walletPrivateKey = pkConfigured || await password({ message: `Enter your Wallet Private Key of type '${selectedNetwork.networkType}' for network '${selectedNetwork.name}'. We will not send or store it.` });
 
 
 const account = privateKeyToAccount(walletPrivateKey);
@@ -227,19 +239,53 @@ const calls = tokenAddresses.map(addr => ({
 
 // console.log(calls);
 
-const balances = await Promise.all(
-  calls.map(c => chainClient.readContract({
-    address: c.address,
-    abi: c.abi,
-    functionName: c.functionName,
-    args: c.args,
-  }))
-);
+// console.log('chainId:', await chainClient.getChainId()); 
+// console.log('block:', await chainClient.getBlockNumber()); 
 
-console.log(balances);
+
+// const balances = await Promise.all(
+//   calls.map(c => {
+//     return {
+//       address: c.address,
+//       balance: chainClient.readContract({
+//         address: c.address,
+//         abi: c.abi,
+//         functionName: c.functionName,
+//         args: c.args,
+//       })
+//     }
+//   })
+// );
+
+// console.log(balances);
 
 // account = privateKeyToAccount(walletPrivateKey);
 // publicClient = createPublicClient({
 //             chain: arbitrum,
 //             transport: http(selectedNetwork.rpcUrl)
 //         });
+
+const mcResults = await chainClient.multicall({
+  contracts: calls,        // mismo orden que "calls"
+  // allowFailure: true,   // (true por defecto) no revienta si un contrato falla
+});
+
+// Combina resultados con sus addresses (mismo índice que calls)
+const balances = mcResults.map((res, i) => ({
+  address: calls[i].address,
+  status: res.status,
+  balance: res.status === 'success'
+    ? BigInt(res.result)   // convierte a bigint en JS
+    : 0n,
+  error: res.status === 'failure' ? res.error : undefined,
+}));
+
+console.table(
+  balances.map(b => ({
+    address: b.address,
+    status: b.status,
+    balance: b.balance.toString(),
+    error: b.error
+  }))
+);
+
