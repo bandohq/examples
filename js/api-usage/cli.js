@@ -176,9 +176,11 @@ const ptf = await rawlist({
 });
 
 const productTypeSelected = responseProductsJson.products.find(n => n.productType === ptf);
-const brandsAvailable = productTypeSelected.brands.map( b => {
+const sortedBrands = [...productTypeSelected.brands].sort((a, b) => a.order - b.order);
+
+const brandsAvailable = sortedBrands.map( b => {
   return {
-    name: `${b.order} - ${b.brandName}`,
+    name: `${b.brandName}`,
     value: b.brandSlug
   };
 });
