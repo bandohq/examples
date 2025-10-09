@@ -123,7 +123,7 @@ async function getHoldingsForTokens(client, walletAddress, tokenAddresses, opts 
 const environment = await rawlist({
   message: 'Select Bando\'s environment',
   choices: [
-    { name: 'Develoment - Sandbox', value: 'https://apidev.bando.cool/api/v1' },
+    { name: 'Development - Sandbox', value: 'https://apidev.bando.cool/api/v1' },
     { name: 'Production - Live', value: 'https://api.bando.cool/api/v1' },
   ],
 });
@@ -192,6 +192,8 @@ const selectedSlugBrand = await rawlist({
 });
 
 const selectedBrand = productTypeSelected.brands.find(b => b.brandSlug === selectedSlugBrand);
+
+console.log()
 
 var variants = selectedBrand.variants.map(v => {
   return {
@@ -368,6 +370,9 @@ if (!quoteResponse.ok) {
   console.log('\x1b[31m%s\x1b[0m', quoteResult.message);
   process.exit(0);
 }
+
+console.log("Quote details");
+console.table([quoteResult], ['fiatCurrency', 'fiatAmount', 'digitalAsset', 'totalAmount']);
 
 let reference;
 
